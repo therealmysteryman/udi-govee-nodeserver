@@ -1,21 +1,21 @@
 {
-    "name": "Twinkly",
+    "name": "Govee",
     "docs": "https://github.com/therealmysteryman/udi-milight-polyglot/blob/master/README.md",
     "type": "python3",
-    "executable": "twinkly_poly.py",
+    "executable": "govee_poly.py",
     "install": "install.sh",
-    "shortPoll": "300",
+    "shortPoll": "60",
     "longPoll": "3600",
-    "description": "Connect Twinkly Lighting system to the ISY994.",
-    "notice": "https://github.com/therealmysteryman/udi-milight-polyglot/blob/master/LICENSE",
+    "description": "Connect Govee Light Strip to the ISY994.",
+    "notice": "https://github.com/therealmysteryman/udi-govee-nodeserver/blob/master/LICENSE",
     "credits": [
         {
-            "title": "twinkly_nodeserver: A Polyglot v2 interface to Milight Protocol V6",
+            "title": "govee_nodeserver: A Polyglot v2 interface to Govee",
             "author": "AutomationGeek",
-            "version": "2.0.5",
-            "date": "January 18, 2021",
-            "source": "https://github.com/therealmysteryman/udi-milight-polyglot",
-            "license": "https://github.com/therealmysteryman/udi-milight-polyglot/blob/master/README.md"
+            "version": "2.0.0",
+            "date": "January 19, 2021",
+            "source": "https://github.com/therealmysteryman/udi-govee-nodeserver",
+            "license": "https://github.com/therealmysteryman/udi-govee-nodeserver/blob/master/README.md"
         },
 	{
             "title": "udi-poly-template-python: A Polyglot v2 Poly template",
@@ -26,12 +26,12 @@
             "license": "https://raw.githubusercontent.com/Einstein42/udi-poly-template-python/master/LICENSE"
         },
 	{
-            "title": "Python Twinly API client",
-            "author": "dr1rrb",
-            "version": "0.0.2",
-            "date": "October 31, 2020",
-            "source": "https://github.com/dr1rrb/py-twinkly-client/",
-            "license": "https://github.com/dr1rrb/py-twinkly-client/blob/main/LICENSE"
+            "title": "govee-api-laggat Package",
+            "author": "LaggAt",
+            "version": "0.0.0",
+            "date": "January 1, 2020",
+            "source": "https://github.com/LaggAt/python-govee-api",
+            "license": "https://github.com/dr1rrb/python-govee-api/blob/main/LICENSE"
         }
     ]
 }
