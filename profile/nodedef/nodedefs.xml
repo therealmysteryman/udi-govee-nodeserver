@@ -16,7 +16,7 @@
             </accepts>
         </cmds>
     </nodeDef>
-    <nodeDef id="TWINKLY_LIGHT" nls="MGR">
+    <nodeDef id="GOVEE_LIGHT" nls="MGR">
         <editors />
         <sts>
             <st id="ST" editor="MONOFF" />
