@@ -1,0 +1,37 @@
+{
+    "name": "Twinkly",
+    "docs": "https://github.com/therealmysteryman/udi-milight-polyglot/blob/master/README.md",
+    "type": "python3",
+    "executable": "twinkly_poly.py",
+    "install": "install.sh",
+    "shortPoll": "300",
+    "longPoll": "3600",
+    "description": "Connect Twinkly Lighting system to the ISY994.",
+    "notice": "https://github.com/therealmysteryman/udi-milight-polyglot/blob/master/LICENSE",
+    "credits": [
+        {
+            "title": "twinkly_nodeserver: A Polyglot v2 interface to Milight Protocol V6",
+            "author": "AutomationGeek",
+            "version": "2.0.5",
+            "date": "January 18, 2021",
+            "source": "https://github.com/therealmysteryman/udi-milight-polyglot",
+            "license": "https://github.com/therealmysteryman/udi-milight-polyglot/blob/master/README.md"
+        },
+	{
+            "title": "udi-poly-template-python: A Polyglot v2 Poly template",
+            "author": "James Milne (Einstein.42)",
+            "version": "2.0.0",
+            "date": "November 8, 2017",
+            "source": "https://github.com/Einstein42/udi-poly-template-python",
+            "license": "https://raw.githubusercontent.com/Einstein42/udi-poly-template-python/master/LICENSE"
+        },
+	{
+            "title": "Python Twinly API client",
+            "author": "dr1rrb",
+            "version": "0.0.2",
+            "date": "October 31, 2020",
+            "source": "https://github.com/dr1rrb/py-twinkly-client/",
+            "license": "https://github.com/dr1rrb/py-twinkly-client/blob/main/LICENSE"
+        }
+    ]
+}

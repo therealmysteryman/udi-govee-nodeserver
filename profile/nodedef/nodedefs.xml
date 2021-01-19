@@ -1,0 +1,36 @@
+<nodeDefs>
+    <nodeDef id="controller" nls="ctl">
+        <editors />
+        <sts>
+            <st id="ST" editor="bool" />
+        </sts>
+        <cmds>
+            <sends>
+              <cmd id="DON" />
+              <cmd id="DOF" />
+            </sends>
+            <accepts>
+              <cmd id="QUERY" />
+              <cmd id="DISCOVER" />
+              <cmd id="INSTALL_PROFILE" />
+            </accepts>
+        </cmds>
+    </nodeDef>
+    <nodeDef id="TWINKLY_LIGHT" nls="MGR">
+        <editors />
+        <sts>
+            <st id="ST" editor="MONOFF" />
+            <st id="GV1" editor="MCLBRI" /> <!-- Brightness -->
+        </sts>
+        <cmds>
+            <sends />
+            <accepts>
+                <cmd id="DON" />
+                <cmd id="DOF" />
+                <cmd id="SET_BRI">
+                    <p id="" editor="MCLBRI" init="GV1" />
+                </cmd>
+            </accepts>
+        </cmds>
+    </nodeDef>
+</nodeDefs>

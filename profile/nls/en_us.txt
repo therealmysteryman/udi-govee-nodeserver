@@ -1,0 +1,15 @@
+# controller
+ST-controller-ST-NAME = Connected
+
+ND-TWINKLY_LIGHT-NAME = Twinkly Light
+ND-TWINKLY_LIGHT-ICON = Lamp
+ND-controller-NAME = Twinkly Controller
+ND-controller-ICON = GenericCtl
+CMD-DISCOVER-NAME = Discover
+CMD-INSTALL_PROFILE-NAME = Install Profile
+
+ST-GV1-NAME = Brightness
+
+CMD-DON-NAME = On
+CMD-DOF-NAME = Off
+CMD-SET_BRI-NAME = Set Brightness
