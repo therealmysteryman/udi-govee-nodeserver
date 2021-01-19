@@ -38,7 +38,7 @@ class Controller(polyinterface.Controller):
         self.name = 'Twinkly'
         self.initialized = False
         self.queryON = False
-        self.host = ""
+        self.api = ""
         self.tries = 0
         self.hb = 0
 
@@ -46,20 +46,20 @@ class Controller(polyinterface.Controller):
         LOGGER.info('Started Twinkly for v2 NodeServer version %s', str(VERSION))
         self.setDriver('ST', 0)
         try:
-            if 'host' in self.polyConfig['customParams']:
-                self.host = self.polyConfig['customParams']['host']
+            if 'api' in self.polyConfig['customParams']:
+                self.api = self.polyConfig['customParams']['api']
             else:
-                self.host = ""
+                self.api = ""
 
             if self.host == "" :
-                LOGGER.error('Twinkly requires \'host\' parameters to be specified in custom configuration.')
+                LOGGER.error('Twinkly requires \'api\' parameters to be specified in custom configuration.')
                 return False
             else:
                 self.check_profile()
                 self.discover()
                 
         except Exception as ex:
-            LOGGER.error('Error starting Twinkly NodeServer: %s', str(ex))
+            LOGGER.error('Error starting Govee
            
 
     def shortPoll(self):
@@ -83,14 +83,14 @@ class Controller(polyinterface.Controller):
 
     def discover(self, *args, **kwargs):
         count = 1
-        for host in self.host.split(','):
-            uniq_name = "t" + "_" + host.replace(".","") + "_" + str(count)
-            myhash =  str(int(hashlib.md5(uniq_name.encode('utf8')).hexdigest(), 16) % (10 ** 8))
-            self.addNode(TwinklyLight(self,self.address, myhash , uniq_name, host ))
-            count = count + 1
+        #for host in self.host.split(','):
+        #    uniq_name = "t" + "_" + host.replace(".","") + "_" + str(count)
+        #    myhash =  str(int(hashlib.md5(uniq_name.encode('utf8')).hexdigest(), 16) % (10 ** 8))
+        #    self.addNode(TwinklyLight(self,self.address, myhash , uniq_name, host ))
+        #    count = count + 1
 
     def delete(self):
-        LOGGER.info('Deleting Twinkly')
+        LOGGER.info('Deleting Govee')
 
     def check_profile(self):
         self.profile_info = get_profile_info(LOGGER)
@@ -120,7 +120,7 @@ class Controller(polyinterface.Controller):
     }
     drivers = [{'driver': 'ST', 'value': 1, 'uom': 2}]
 
-class TwinklyLight(polyinterface.Node):
+class GoveeLight(polyinterface.Node):
 
     def __init__(self, controller, primary, address, name, host):
 
