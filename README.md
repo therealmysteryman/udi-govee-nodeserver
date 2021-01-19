@@ -1,4 +1,4 @@
-# Twinkly Polyglot V2 Node Server
+# Govee Polyglot V2 Node Server
 
 ![Build Status](https://travis-ci.org/therealmysteryman/udi-govee-nodeserver.svg?branch=master)
 
