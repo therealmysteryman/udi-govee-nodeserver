@@ -160,7 +160,7 @@ class GoveeLight(polyinterface.Node):
             await govee.get_states()
         )
         cached_device = devices[self.device_id]
-        await govee.close(
+        await govee.close()
         return cached_device.power_state, cached_device.brightness
     
     async def _turnOff(self) :
