@@ -2,7 +2,7 @@
 
 ![Build Status](https://travis-ci.org/therealmysteryman/udi-govee-nodeserver.svg?branch=master)
 
-This Poly provides an interface between Govee and Polyglot v2 server. 
+This Poly provides an interface between Govee and Polyglot v2 server. Provide basic control On/Off and Brightness
 
 ## Installation
 
