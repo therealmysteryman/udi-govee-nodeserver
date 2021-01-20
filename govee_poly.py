@@ -63,7 +63,7 @@ class Controller(polyinterface.Controller):
                 self.discover()
                 
         except Exception as ex:
-            LOGGER.error('Error starting Govee
+            LOGGER.error('Error starting Govee')
            
 
     def shortPoll(self):
