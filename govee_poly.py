@@ -13,8 +13,7 @@ import time
 import json
 import sys
 from copy import deepcopy
-from twinkly_client import TwinklyClient
-from aiohttp import ClientSession, ClientTimeout
+from govee_api_laggat import Govee, GoveeAbstractLearningStorage, GoveeLearnedInfo
 
 LOGGER = polyinterface.LOGGER
 SERVERDATA = json.load(open('server.json'))
@@ -35,7 +34,7 @@ class Controller(polyinterface.Controller):
 
     def __init__(self, polyglot):
         super(Controller, self).__init__(polyglot)
-        self.name = 'Twinkly'
+        self.name = 'Govee'
         self.initialized = False
         self.queryON = False
         self.api = ""
@@ -50,9 +49,14 @@ class Controller(polyinterface.Controller):
                 self.api = self.polyConfig['customParams']['api']
             else:
                 self.api = ""
+                  
+            if 'nbDevices' in self.polyConfig['customParams']:
+                self.nbDevices = self.polyConfig['customParams']['nbDevices']
+            else:
+                self.nbDevices = 1
 
-            if self.host == "" :
-                LOGGER.error('Twinkly requires \'api\' parameters to be specified in custom configuration.')
+            if self.api == "" :
+                LOGGER.error('Govee requires \'api\' parameters to be specified in custom configuration.')
                 return False
             else:
                 self.check_profile()
@@ -82,12 +86,8 @@ class Controller(polyinterface.Controller):
             self.hb = 0
 
     def discover(self, *args, **kwargs):
-        count = 1
-        #for host in self.host.split(','):
-        #    uniq_name = "t" + "_" + host.replace(".","") + "_" + str(count)
-        #    myhash =  str(int(hashlib.md5(uniq_name.encode('utf8')).hexdigest(), 16) % (10 ** 8))
-        #    self.addNode(TwinklyLight(self,self.address, myhash , uniq_name, host ))
-        #    count = count + 1
+        for i in range(int(self.nbDevices)):
+            self.addNode(GoveeLight(self, self.address, "led" + str(i+1), "led" + str(i+1), self.api, i ))
 
     def delete(self):
         LOGGER.info('Deleting Govee')
@@ -122,14 +122,16 @@ class Controller(polyinterface.Controller):
 
 class GoveeLight(polyinterface.Node):
 
-    def __init__(self, controller, primary, address, name, host):
+    def __init__(self, controller, primary, address, name, api_key, device_id):
 
-        super(TwinklyLight, self).__init__(controller, primary, address, name)
+        super(GoveeLight, self).__init__(controller, primary, address, name)
         self.queryON = True
-        self.myHost = host
+        self.api_key = api_key
+        self.device_id = device_id
 
     def start(self):
-        self.query()
+        #self.query()
+        pass
 
     def setOn(self, command):
         asyncio.run(self._turnOn())
@@ -144,44 +146,46 @@ class GoveeLight(polyinterface.Node):
         self.setDriver('GV1', int(command.get('value')),True)
         
     def query(self):
-        if ( asyncio.run(self._isOn()) ) :
-            self.setDriver('ST', 100,True)
-        else :
-            self.setDriver('ST', 0,True)
-        self.setDriver('GV1', asyncio.run(self._getBri()) , True)
-        self.reportDrivers()
-
-    async def _isOn(self) : 
-        cs = ClientSession(raise_for_status=True, timeout=ClientTimeout(total=3))
-        isOn = await TwinklyClient(self.myHost,cs).get_is_on()
-        await cs.close()
-        return isOn
-        
-    async def _getBri(self) : 
-        cs = ClientSession(raise_for_status=True, timeout=ClientTimeout(total=3))
-        intBri = await TwinklyClient(self.myHost,cs).get_brightness()
-        await cs.close()
-        return intBri
+        asyncio.run(self._query())
+                         
+    async def _query(self) : 
+        govee = await Govee.create(self.api_key)
+        ping_ms, err = await govee.ping()  # all commands as above
+        devices, err = await govee.get_devices()
+        devices = (
+            await govee.get_states()
+        )
+        print (devices)
+        await govee.close()
     
     async def _turnOff(self) :
-        cs = ClientSession(raise_for_status=True, timeout=ClientTimeout(total=3))
-        tc = await TwinklyClient(self.myHost,cs).set_is_on(False)
-        await cs.close()
+        govee = await Govee.create(self.api_key)
+        ping_ms, err = await govee.ping()  # all commands as above
+        devices, err = await govee.get_devices()
+        cache_device = await govee.device(devices[self.device_id].device) 
+        success, err = await govee.turn_off(cache_device.device)
+        await govee.close()
         
     async def _turnOn(self) :
-        cs = ClientSession(raise_for_status=True, timeout=ClientTimeout(total=3))
-        tc = await TwinklyClient(self.myHost,cs).set_is_on(True)
-        await cs.close()
+        govee = await Govee.create(self.api_key)
+        ping_ms, err = await govee.ping()  # all commands as above
+        devices, err = await govee.get_devices()
+        cache_device = await govee.device(devices[self.device_id].device) 
+        success, err = await govee.turn_on(cache_device.device)
+        await govee.close()
         
     async def _setBrightness(self,bri) :
-        cs = ClientSession(raise_for_status=True, timeout=ClientTimeout(total=3))
-        await TwinklyClient(self.myHost,cs).set_brightness(bri)
-        await cs.close()
+        govee = await Govee.create(self.api_key)
+        ping_ms, err = await govee.ping()  # all commands as above
+        devices, err = await govee.get_devices()
+        cache_device = await govee.device(devices[self.device_id].device) 
+        success, err = await govee.set_brightness(cache_device, bri)
+        await govee.close()
             
     drivers = [{'driver': 'ST', 'value': 0, 'uom': 78},
                {'driver': 'GV1', 'value': 0, 'uom': 51}]
 
-    id = 'TWINKLY_LIGHT'
+    id = 'GOVEE_LIGHT'
     commands = {
                     'DON': setOn,
                     'DOF': setOff,
@@ -190,7 +194,7 @@ class GoveeLight(polyinterface.Node):
 
 if __name__ == "__main__":
     try:
-        polyglot = polyinterface.Interface('TwinklyNodeServer')
+        polyglot = polyinterface.Interface('GoveeNodeServer')
         polyglot.start()
         control = Controller(polyglot)
         control.runForever()
