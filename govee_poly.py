@@ -45,8 +45,8 @@ class Controller(polyinterface.Controller):
         LOGGER.info('Started Twinkly for v2 NodeServer version %s', str(VERSION))
         self.setDriver('ST', 0)
         try:
-            if 'api' in self.polyConfig['customParams']:
-                self.api = self.polyConfig['customParams']['api']
+            if 'api_key' in self.polyConfig['customParams']:
+                self.api_key = self.polyConfig['customParams']['api_key']
             else:
                 self.api = ""
                   
@@ -55,8 +55,8 @@ class Controller(polyinterface.Controller):
             else:
                 self.nbDevices = 1
 
-            if self.api == "" :
-                LOGGER.error('Govee requires \'api\' parameters to be specified in custom configuration.')
+            if self.api_key == "" :
+                LOGGER.error('Govee requires \'api_key\' parameters to be specified in custom configuration.')
                 return False
             else:
                 self.check_profile()
@@ -87,7 +87,7 @@ class Controller(polyinterface.Controller):
 
     def discover(self, *args, **kwargs):
         for i in range(int(self.nbDevices)):
-            self.addNode(GoveeLight(self, self.address, "led" + str(i+1), "led" + str(i+1), self.api, i ))
+            self.addNode(GoveeLight(self, self.address, "led" + str(i+1), "led" + str(i+1), self.api_key, i ))
 
     def delete(self):
         LOGGER.info('Deleting Govee')
@@ -130,7 +130,6 @@ class GoveeLight(polyinterface.Node):
         self.device_id = device_id
 
     def start(self):
-        #self.query()
         pass
 
     def setOn(self, command):
@@ -162,7 +161,7 @@ class GoveeLight(polyinterface.Node):
         govee = await Govee.create(self.api_key)
         ping_ms, err = await govee.ping()  # all commands as above
         devices, err = await govee.get_devices()
-        cache_device = await govee.device(devices[self.device_id].device) 
+        cache_device = govee.device(devices[self.device_id].device) 
         success, err = await govee.turn_off(cache_device.device)
         await govee.close()
         
@@ -170,7 +169,7 @@ class GoveeLight(polyinterface.Node):
         govee = await Govee.create(self.api_key)
         ping_ms, err = await govee.ping()  # all commands as above
         devices, err = await govee.get_devices()
-        cache_device = await govee.device(devices[self.device_id].device) 
+        cache_device = govee.device(devices[self.device_id].device) 
         success, err = await govee.turn_on(cache_device.device)
         await govee.close()
         
@@ -178,7 +177,7 @@ class GoveeLight(polyinterface.Node):
         govee = await Govee.create(self.api_key)
         ping_ms, err = await govee.ping()  # all commands as above
         devices, err = await govee.get_devices()
-        cache_device = await govee.device(devices[self.device_id].device) 
+        cache_device = govee.device(devices[self.device_id].device) 
         success, err = await govee.set_brightness(cache_device, bri)
         await govee.close()
             
