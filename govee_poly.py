@@ -130,7 +130,7 @@ class GoveeLight(polyinterface.Node):
         self.device_id = device_id
 
     def start(self):
-        pass
+        self.query()
 
     def setOn(self, command):
         asyncio.run(self._turnOn())
@@ -145,8 +145,13 @@ class GoveeLight(polyinterface.Node):
         self.setDriver('GV1', int(command.get('value')),True)
         
     def query(self):
-        asyncio.run(self._query())
-                         
+        ps, bri = asyncio.run(self._query())
+        if ps :
+            self.setDriver('ST', 100, True)
+        else :
+            self.setDriver('ST', 0, True)
+        self.setDriver('GV1', int(bri), True)
+        
     async def _query(self) : 
         govee = await Govee.create(self.api_key)
         ping_ms, err = await govee.ping()  # all commands as above
@@ -154,8 +159,9 @@ class GoveeLight(polyinterface.Node):
         devices = (
             await govee.get_states()
         )
-        print (devices)
-        await govee.close()
+        cached_device = devices[self.device_id]
+        await govee.close(
+        return cached_device.power_state, cached_device.brightness
     
     async def _turnOff(self) :
         govee = await Govee.create(self.api_key)
