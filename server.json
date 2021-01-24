@@ -4,16 +4,16 @@
     "type": "python3",
     "executable": "govee_poly.py",
     "install": "install.sh",
-    "shortPoll": "900",
-    "longPoll": "3600",
+    "shortPoll": "120",
+    "longPoll": "1800",
     "description": "Basic control(On/Off) of Govee Light Strip on ISY994.",
     "notice": "https://github.com/therealmysteryman/udi-govee-nodeserver/blob/master/LICENSE",
     "credits": [
         {
             "title": "govee_nodeserver: A Polyglot v2 interface to Govee",
             "author": "AutomationGeek",
-            "version": "2.0.2",
-            "date": "January 20, 2021",
+            "version": "2.0.3",
+            "date": "January 24, 2021",
             "source": "https://github.com/therealmysteryman/udi-govee-nodeserver",
             "license": "https://github.com/therealmysteryman/udi-govee-nodeserver/blob/master/README.md"
         },
