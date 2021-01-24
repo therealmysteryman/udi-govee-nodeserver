@@ -38,7 +38,6 @@ class Controller(polyinterface.Controller):
         self.initialized = False
         self.queryON = False
         self.api = ""
-        self.tries = 0
         self.hb = 0
 
     def start(self):
@@ -60,17 +59,19 @@ class Controller(polyinterface.Controller):
         except Exception as ex:
             LOGGER.error('Error starting Govee')
            
-
     def shortPoll(self):
         self.setDriver('ST', 1)
-        self.reportDrivers()
         for node in self.nodes:
             if  self.nodes[node].queryON == True :
-                self.nodes[node].query()
+                self.nodes[node].update()
                 
     def longPoll(self):
         self.heartbeat()
 
+    def query(self):
+        for node in self.nodes:
+            self.nodes[node].reportDrivers()        
+        
     def heartbeat(self):
         LOGGER.debug('heartbeat: hb={}'.format(self.hb))
         if self.hb == 0:
@@ -98,8 +99,7 @@ class Controller(polyinterface.Controller):
             return devices
         except Exception as ex:
             LOGGER.error('_getDevices:')
-            
-                
+                      
     def check_profile(self):
         self.profile_info = get_profile_info(LOGGER)
         # Set Default profile version if not Found
@@ -122,7 +122,7 @@ class Controller(polyinterface.Controller):
 
     id = 'controller'
     commands = {
-        'QUERY': shortPoll,
+        'QUERY': query,
         'DISCOVER': discover,
         'INSTALL_PROFILE': install_profile,
     }
@@ -138,7 +138,7 @@ class GoveeLight(polyinterface.Node):
         self.device_id = device_id
 
     def start(self):
-        self.query()
+        self.update()
 
     def setOn(self, command):
         try:
@@ -161,7 +161,7 @@ class GoveeLight(polyinterface.Node):
         except Exception as ex:
             LOGGER.error('setBrightness:', ex)     
         
-    def query(self):
+    def update(self):
         try:
             ps, bri = asyncio.run(self._query())
             if ps :
@@ -170,8 +170,11 @@ class GoveeLight(polyinterface.Node):
                 self.setDriver('ST', 0, True)
             self.setDriver('GV1', int(bri), True)
         except Exception as ex:
-            LOGGER.error('query:', ex)   
-        
+            LOGGER.error('update:', ex)   
+    
+    def query(self):
+        self.reportDrivers()
+    
     async def _query(self) : 
         govee = await Govee.create(self.api_key)
         ping_ms, err = await govee.ping()  # all commands as above
