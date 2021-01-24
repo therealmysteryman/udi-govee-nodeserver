@@ -4,8 +4,8 @@
     "type": "python3",
     "executable": "govee_poly.py",
     "install": "install.sh",
-    "shortPoll": "120",
-    "longPoll": "1800",
+    "shortPoll": "90",
+    "longPoll": "600",
     "description": "Basic control(On/Off) of Govee Light Strip on ISY994.",
     "notice": "https://github.com/therealmysteryman/udi-govee-nodeserver/blob/master/LICENSE",
     "credits": [
