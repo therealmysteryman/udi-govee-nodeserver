@@ -157,7 +157,7 @@ class GoveeLight(polyinterface.Node):
     def setBrightness(self, command):
         try:
             asyncio.run(self._setBrightness(int(command.get('value'))))
-            self.setDriver('GV1', int(command.get('value')),True)
+            self.setDriver('GV1', int(command.get('value')))
         except Exception as ex:
             LOGGER.error('setBrightness:', ex)     
         
@@ -165,10 +165,10 @@ class GoveeLight(polyinterface.Node):
         try:
             ps, bri = asyncio.run(self._query())
             if ps :
-                self.setDriver('ST', 100, True)
+                self.setDriver('ST', 100)
             else :
-                self.setDriver('ST', 0, True)
-            self.setDriver('GV1', int(bri), True)
+                self.setDriver('ST', 0)
+            self.setDriver('GV1', int(bri))
         except Exception as ex:
             LOGGER.error('update:', ex)   
     
@@ -182,12 +182,14 @@ class GoveeLight(polyinterface.Node):
         devices = (
             await govee.get_states()
         )
+        cached_device = None
         for device in devices :
             if device.device == self.device_id :
                 cached_device = device
                 break
         await govee.close()
-        return cached_device.power_state, cached_device.brightness
+        if cached_device is not None :
+            return cached_device.power_state, cached_device.brightness
     
     async def _turnOff(self) :
         govee = await Govee.create(self.api_key)
