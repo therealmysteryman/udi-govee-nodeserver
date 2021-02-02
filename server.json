@@ -12,7 +12,7 @@
         {
             "title": "govee_nodeserver: A Polyglot v2 interface to Govee",
             "author": "AutomationGeek",
-            "version": "2.0.4",
+            "version": "2.0.5",
             "date": "February 2, 2021",
             "source": "https://github.com/therealmysteryman/udi-govee-nodeserver",
             "license": "https://github.com/therealmysteryman/udi-govee-nodeserver/blob/master/README.md"
