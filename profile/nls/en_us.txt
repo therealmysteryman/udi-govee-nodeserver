@@ -9,6 +9,9 @@ CMD-DISCOVER-NAME = Discover
 CMD-INSTALL_PROFILE-NAME = Install Profile
 
 ST-GV1-NAME = Brightness
+ST-GV6-NAME = Color Red
+ST-GV7-NAME = Color Green
+ST-GV8-NAME = Color Blue
 
 CMD-DON-NAME = On
 CMD-DOF-NAME = Off
