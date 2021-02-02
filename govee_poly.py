@@ -93,7 +93,6 @@ class Controller(polyinterface.Controller):
     async def _getDevices(self):
         try:
             govee = await Govee.create(self.api_key)
-            ping_ms, err = await govee.ping()  # all commands as above
             devices, err = await govee.get_devices()
             await govee.close()
             return devices
@@ -175,7 +174,7 @@ class GoveeLight(polyinterface.Node):
             color.append(color_g)
             color.append(color_b)
                                 
-            asyncio.run(self._setColor(color)
+            asyncio.run(self._setColor(color))
             self.setDriver('GV6', color_r)
             self.setDriver('GV7', color_g)
             self.setDriver('GV8', color_b)
