@@ -160,15 +160,43 @@ class GoveeLight(polyinterface.Node):
             self.setDriver('GV1', int(command.get('value')))
         except Exception as ex:
             LOGGER.error('setBrightness:', ex)     
+    
+    def setColor(self,command):
+        try:
+           
+            color = []
         
+            query = command.get('query')
+            color_r = int(query.get('R.uom100'))
+            color_g = int(query.get('G.uom100'))
+            color_b = int(query.get('B.uom100'))    
+        
+            color.append(color_r)
+            color.append(color_g)
+            color.append(color_b)
+                                
+            asyncio.run(self._setColor(color)
+            self.setDriver('GV6', color_r)
+            self.setDriver('GV7', color_g)
+            self.setDriver('GV8', color_b)
+
+        except Exception as ex:
+            LOGGER.error('setColor:', ex)     
+    
     def update(self):
         try:
-            ps, bri = asyncio.run(self._query())
+            ps, bri, color = asyncio.run(self._query())
             if ps :
                 self.setDriver('ST', 100)
             else :
                 self.setDriver('ST', 0)
+            
             self.setDriver('GV1', int(bri))
+                        
+            self.setDriver('GV6', int(color[0]))
+            self.setDriver('GV7', int(color[1]))
+            self.setDriver('GV8', int(color[2]))
+                        
         except Exception as ex:
             LOGGER.error('update:', ex)   
     
@@ -176,24 +204,27 @@ class GoveeLight(polyinterface.Node):
         self.reportDrivers()
     
     async def _query(self) : 
-        govee = await Govee.create(self.api_key)
-        ping_ms, err = await govee.ping()  # all commands as above
-        devices, err = await govee.get_devices()
-        devices = (
-            await govee.get_states()
-        )
         cached_device = None
+                                 
+        govee = await Govee.create(self.api_key)
+        ping_ms, err = await govee.ping()  
+        devices, err = await govee.get_devices()
+        devices = await govee.get_states()
+                                
         for device in devices :
             if device.device == self.device_id :
                 cached_device = device
                 break
         await govee.close()
+                        
         if cached_device is not None :
-            return cached_device.power_state, cached_device.brightness
-    
+            return cached_device.power_state, cached_device.brightness, cached_device.color
+        else:
+            return False, 0, (0,0,0) 
+
     async def _turnOff(self) :
         govee = await Govee.create(self.api_key)
-        ping_ms, err = await govee.ping()  # all commands as above
+        ping_ms, err = await govee.ping()  
         devices, err = await govee.get_devices() 
         for device in devices :
             if device.device == self.device_id :
@@ -204,7 +235,7 @@ class GoveeLight(polyinterface.Node):
         
     async def _turnOn(self) :
         govee = await Govee.create(self.api_key)
-        ping_ms, err = await govee.ping()  # all commands as above
+        ping_ms, err = await govee.ping() 
         devices, err = await govee.get_devices()
         for device in devices :
             if device.device == self.device_id:
@@ -215,7 +246,7 @@ class GoveeLight(polyinterface.Node):
         
     async def _setBrightness(self,bri) :
         govee = await Govee.create(self.api_key)
-        ping_ms, err = await govee.ping()  # all commands as above
+        ping_ms, err = await govee.ping() 
         devices, err = await govee.get_devices()
         for device in devices :
             if device.device == self.device_id:
@@ -223,15 +254,30 @@ class GoveeLight(polyinterface.Node):
                 break
         success, err = await govee.set_brightness(cached_device, bri)
         await govee.close()
+                        
+    async def _setColor(self,color) :
+        govee = await Govee.create(self.api_key)
+        ping_ms, err = await govee.ping() 
+        devices, err = await govee.get_devices()
+        for device in devices :
+            if device.device == self.device_id:
+                cached_device = device
+                break
+        success, err = await govee.set_color(cached_device, color)
+        await govee.close()
             
     drivers = [{'driver': 'ST', 'value': 0, 'uom': 78},
-               {'driver': 'GV1', 'value': 0, 'uom': 51}]
+               {'driver': 'GV1', 'value': 0, 'uom': 51},
+               {'driver': 'GV6', 'value': 0, 'uom': 100},
+               {'driver': 'GV7', 'value': 0, 'uom': 100},
+               {'driver': 'GV8', 'value': 0, 'uom': 100}]
 
     id = 'GOVEE_LIGHT'
     commands = {
                     'DON': setOn,
                     'DOF': setOff,
-                    'SET_BRI': setBrightness
+                    'SET_BRI': setBrightness,
+                    'SET_COLORID': setColor
                 }
 
 if __name__ == "__main__":
