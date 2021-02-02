@@ -213,7 +213,7 @@ class GoveeLight(polyinterface.Node):
             if deviceState.device == self.device_id :
                 myDeviceState = deviceState
                 break
-                        
+        await govee.close()                
         if myDeviceState is not None :
             return myDeviceState.power_state, myDeviceState.brightness, myDeviceState.color
         else:
