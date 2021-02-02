@@ -20,7 +20,10 @@
         <editors />
         <sts>
             <st id="ST" editor="MONOFF" />
-            <st id="GV1" editor="MCLBRI" /> <!-- Brightness -->
+            <st id="GV1" editor="MCLBRI" />
+            <st id="GV6" editor="MCOLOR" />
+            <st id="GV7" editor="MCOLOR" />
+            <st id="GV8" editor="MCOLOR" />
         </sts>
         <cmds>
             <sends />
@@ -29,6 +32,11 @@
                 <cmd id="DOF" />
                 <cmd id="SET_BRI">
                     <p id="" editor="MCLBRI" init="GV1" />
+                </cmd>
+                <cmd id="SET_COLORID">
+                    <p id="R" editor="MCOLOR" init="GV6" />
+                    <p id="G" editor="MCOLOR" init="GV7" />
+                    <p id="B" editor="MCOLOR" init="GV8" />
                 </cmd>
             </accepts>
         </cmds>
