@@ -12,7 +12,6 @@ This Poly provides an interface between Govee and Polyglot v2 server. Provide ba
 
 3 - Create a custom variable called api and paste the api key received.
 
-.
 ## Source
 
 1. Using this Python Library to control the Govee - https://github.com/LaggAt/python-govee-api
