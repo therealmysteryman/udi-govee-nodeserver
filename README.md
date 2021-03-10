@@ -10,7 +10,7 @@ This Poly provides an interface between Govee and Polyglot v2 server. Provide ba
 
 2 - Install Govee from Polyglot Store
 
-3 - Create a custom variable called api and paste the api key received.
+3 - Create a custom variable called api_key and paste the api key received.
 
 ## Source
 
